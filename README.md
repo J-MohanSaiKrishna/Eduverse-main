@@ -1,0 +1,2 @@
+# Eduverse
+AI generative project

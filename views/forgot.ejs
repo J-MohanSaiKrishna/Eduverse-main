@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Forgot Password — EduVerse</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <style>
+    * {
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+      min-height: 100vh;
+      overflow: hidden;
+    }
+
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.4;
+      animation: float 8s ease-in-out infinite;
+    }
+
+    .orb-1 {
+      width: 350px;
+      height: 350px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      top: -80px;
+      left: -80px;
+    }
+
+    .orb-2 {
+      width: 300px;
+      height: 300px;
+      background: linear-gradient(135deg, #f093fb, #f5576c);
+      bottom: -60px;
+      right: -60px;
+      animation-delay: -3s;
+    }
+
+    @keyframes float {
+
+      0%,
+      100% {
+        transform: translate(0, 0) scale(1);
+      }
+
+      50% {
+        transform: translate(-20px, 20px) scale(0.95);
+      }
+    }
+
+    .grid-pattern {
+      position: absolute;
+      inset: 0;
+      background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+
+    .glass-card {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+    }
+
+    .input-field {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      transition: all 0.3s ease;
+    }
+
+    .input-field:focus {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(139, 92, 246, 0.6);
+      box-shadow: 0 0 20px rgba(139, 92, 246, 0.15);
+    }
+
+    .btn-glow {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      transition: all 0.3s;
+    }
+
+    .btn-glow:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+    }
+  </style>
+</head>
+
+<body class="flex justify-center items-center min-h-screen relative">
+
+  <div class="grid-pattern"></div>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+
+  <div class="glass-card rounded-2xl p-8 w-full max-w-md mx-4 relative z-10">
+    <div class="text-center mb-6">
+      <div
+        class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-violet-500 to-purple-600 mb-4 shadow-lg">
+        <svg class="h-7 w-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
+        </svg>
+      </div>
+      <h1 class="text-2xl font-bold text-white mb-1">Reset Password</h1>
+      <p class="text-gray-400 text-sm">Enter your email and phone to verify your identity</p>
+    </div>
+
+    <form action="/forgot" method="POST" class="space-y-5">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <div>
+        <label class="block text-sm font-medium text-gray-300 mb-2">Email Address</label>
+        <input type="email" name="email" required placeholder="you@example.com"
+          class="input-field w-full px-4 py-3 rounded-xl text-white placeholder-gray-500 outline-none">
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-300 mb-2">Phone Number</label>
+        <input type="text" name="phone" required placeholder="Your registered phone number"
+          class="input-field w-full px-4 py-3 rounded-xl text-white placeholder-gray-500 outline-none">
+      </div>
+      <button type="submit" class="btn-glow w-full text-white py-3.5 rounded-xl font-semibold text-base">
+        Verify Identity
+      </button>
+    </form>
+
+    <p class="mt-5 text-center">
+      <a href="/login" class="text-violet-400 hover:text-violet-300 transition-colors text-sm font-medium">← Back to
+        login</a>
+    </p>
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en" x-data="{ darkMode: localStorage.getItem('darkMode') === 'true' || (!('darkMode' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches) }" x-init="$watch('darkMode', val => localStorage.setItem('darkMode', val)); darkMode ? document.documentElement.classList.add('dark') : document.documentElement.classList.remove('dark')" :class="{ 'dark': darkMode }">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <title>Free Courses — EduVerse</title>
+    <style>
+        * {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(180deg, #0f0c29 0%, #1a1440 30%, #1e1848 60%, #24243e 100%);
+            min-height: 100vh;
+        }
+
+        .nav-glass {
+            background: rgba(15, 12, 41, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .course-card {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .course-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(139, 92, 246, 0.3);
+            box-shadow: 0 25px 50px rgba(139, 92, 246, 0.15), 0 0 0 1px rgba(139, 92, 246, 0.1);
+        }
+
+        .hero-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 40%, #f093fb 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-gradient::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.08) 0%, transparent 40%);
+        }
+
+        .topic-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .topic-btn:hover {
+            background: rgba(139, 92, 246, 0.2);
+            border-color: rgba(139, 92, 246, 0.4);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(139, 92, 246, 0.2);
+        }
+
+        .search-glass {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .search-input {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s;
+        }
+
+        .search-input:focus {
+            border-color: rgba(139, 92, 246, 0.5);
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.1);
+        }
+
+        .btn-enroll {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-enroll::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-enroll:hover::before {
+            left: 100%;
+        }
+
+        .btn-enroll:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-video {
+            background: linear-gradient(135deg, #f5576c, #ff6b6b);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-video::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-video:hover::before {
+            left: 100%;
+        }
+
+        .btn-video:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(245, 87, 108, 0.4);
+        }
+
+        .badge-free {
+            background: linear-gradient(135deg, #43e97b, #38f9d7);
+            color: #0f0c29;
+        }
+
+        .dots-pattern {
+            background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 30px 30px;
+        }
+
+        .category-badge {
+            background: rgba(139, 92, 246, 0.15);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            color: #c4b5fd;
+        }
+
+        .img-overlay {
+            background: linear-gradient(to top, rgba(15, 12, 41, 0.9) 0%, transparent 60%);
+        }
+        
+        .dark .img-overlay {
+            background: linear-gradient(to top, rgba(15, 12, 41, 0.9) 0%, transparent 60%);
+        }
+
+        .dark-mode-toggle {
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+        .dark-mode-toggle:hover {
+            background-color: rgba(139, 92, 246, 0.2);
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 dark:bg-[#0f0c29] text-gray-800 dark:text-white transition-colors duration-300 min-h-screen" :style="darkMode ? 'background: linear-gradient(180deg, #0f0c29 0%, #1a1440 30%, #1e1848 60%, #24243e 100%);' : 'background: #f8fafc;'">
+    <!-- Navbar -->
+    <nav class="nav-glass p-4 sticky top-0 z-50">
+        <div class="max-w-screen-xl p-2 sm:px-16 mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                <a href="/" class="flex items-center gap-2 group">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center shadow-lg group-hover:shadow-violet-500/30 transition-shadow">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                        </svg>
+                    </div>
+                    <span class="text-gray-900 dark:text-white text-xl font-bold tracking-tight">EduVerse</span>
+                </a>
+            </div>
+            <div class="hidden md:flex items-center space-x-6 text-sm font-medium">
+                <a href="/" class="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition">Home</a>
+                <% if (user && user.role !=='user' ) { %>
+                    <a href="/admin/quiz" class="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition">Admin</a>
+                    <a href="/contacts" class="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition">Queries</a>
+                <% } %>
+                <a href="/courses" class="text-violet-600 dark:text-violet-400 font-semibold">Courses</a>
+                <a href="/leaderboard" class="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition">Results</a>
+                <a href="/contact" class="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition">Contact</a>
+                <div @click="darkMode = !darkMode" class="dark-mode-toggle text-gray-600 dark:text-gray-300" title="Toggle Dark/Light Mode">
+                    <svg x-show="!darkMode" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                    <svg x-show="darkMode" x-cloak class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                </div>
+                <a href="/profile" class="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition flex items-center gap-2">
+                    <span class="bg-violet-100 text-violet-700 dark:bg-violet-500/20 dark:border dark:border-violet-500/30 dark:text-violet-300 px-3 py-1 rounded-lg text-xs font-semibold">
+                        <%= user.name %>
+                    </span>
+                </a>
+                <a href="/logout" class="text-gray-500 hover:text-red-500 dark:hover:text-red-400 transition">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero-gradient text-white py-20">
+        <div class="max-w-screen-xl mx-auto px-4 sm:px-16 text-center relative z-10">
+            <div
+                class="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-4 py-1.5 text-sm mb-6">
+                <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+                <span class="text-white/90">
+                    <%= courses.length %> Free Courses Available
+                </span>
+            </div>
+            <h1 class="text-5xl md:text-6xl font-extrabold mb-4 tracking-tight">Free Premium Courses</h1>
+            <p class="text-xl opacity-80 max-w-2xl mx-auto">Access top-rated courses with video tutorials — completely
+                free. Start learning today!</p>
+        </div>
+    </section>
+
+    <!-- Topics -->
+    <section class="max-w-screen-xl mx-auto px-4 sm:px-16 -mt-10 mb-8 relative z-10" x-data="courseFilter()">
+        <div class="search-glass bg-white/70 dark:bg-white/5 rounded-2xl p-6 shadow-xl dark:shadow-none">
+            <h2 class="text-xl font-bold mb-4 text-gray-800 dark:text-white">Quick Filters</h2>
+            <div class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+                <button @click="quickFilter('python')" class="topic-btn text-gray-700 dark:text-white bg-white dark:bg-transparent shadow-sm dark:shadow-none p-3 rounded-xl text-center">
+                    <div class="text-2xl mb-1">&#x1F40D;</div>
+                    <div class="text-xs font-semibold">Python</div>
+                </button>
+                <button @click="quickFilter('javascript')" class="topic-btn text-gray-700 dark:text-white bg-white dark:bg-transparent shadow-sm dark:shadow-none p-3 rounded-xl text-center">
+                    <div class="text-2xl mb-1">&#x26A1;</div>
+                    <div class="text-xs font-semibold">JavaScript</div>
+                </button>
+                <button @click="quickFilter('java')" class="topic-btn text-gray-700 dark:text-white bg-white dark:bg-transparent shadow-sm dark:shadow-none p-3 rounded-xl text-center">
+                    <div class="text-2xl mb-1">&#x2615;</div>
+                    <div class="text-xs font-semibold">Java</div>
+                </button>
+                <button @click="quickFilter('web')" class="topic-btn text-gray-700 dark:text-white bg-white dark:bg-transparent shadow-sm dark:shadow-none p-3 rounded-xl text-center">
+                    <div class="text-2xl mb-1">&#x1F310;</div>
+                    <div class="text-xs font-semibold">Web Dev</div>
+                </button>
+                <button @click="quickFilter('artificial')" class="topic-btn text-gray-700 dark:text-white bg-white dark:bg-transparent shadow-sm dark:shadow-none p-3 rounded-xl text-center">
+                    <div class="text-2xl mb-1">&#x1F916;</div>
+                    <div class="text-xs font-semibold">AI &amp; ML</div>
+                </button>
+                <button @click="quickFilter('data')" class="topic-btn text-gray-700 dark:text-white bg-white dark:bg-transparent shadow-sm dark:shadow-none p-3 rounded-xl text-center">
+                    <div class="text-2xl mb-1">&#x1F4CA;</div>
+                    <div class="text-xs font-semibold">Data Science</div>
+                </button>
+                <button @click="quickFilter('cyber')" class="topic-btn text-gray-700 dark:text-white bg-white dark:bg-transparent shadow-sm dark:shadow-none p-3 rounded-xl text-center">
+                    <div class="text-2xl mb-1">&#x1F512;</div>
+                    <div class="text-xs font-semibold">Security</div>
+                </button>
+                <button @click="quickFilter('mobile')" class="topic-btn text-gray-700 dark:text-white bg-white dark:bg-transparent shadow-sm dark:shadow-none p-3 rounded-xl text-center">
+                    <div class="text-2xl mb-1">&#x1F4F1;</div>
+                    <div class="text-xs font-semibold">Mobile</div>
+                </button>
+                <button @click="quickFilter('cloud')" class="topic-btn text-gray-700 dark:text-white bg-white dark:bg-transparent shadow-sm dark:shadow-none p-3 rounded-xl text-center">
+                    <div class="text-2xl mb-1">&#x2601;</div>
+                    <div class="text-xs font-semibold">Cloud</div>
+                </button>
+                <button @click="quickFilter('design')" class="topic-btn text-gray-700 dark:text-white bg-white dark:bg-transparent shadow-sm dark:shadow-none p-3 rounded-xl text-center">
+                    <div class="text-2xl mb-1">&#x1F3A8;</div>
+                    <div class="text-xs font-semibold">Design</div>
+                </button>
+                <button @click="quickFilter('marketing')" class="topic-btn text-gray-700 dark:text-white bg-white dark:bg-transparent shadow-sm dark:shadow-none p-3 rounded-xl text-center">
+                    <div class="text-2xl mb-1">&#x1F4E2;</div>
+                    <div class="text-xs font-semibold">Marketing</div>
+                </button>
+                <button @click="quickFilter('programming')" class="topic-btn text-gray-700 dark:text-white bg-white dark:bg-transparent shadow-sm dark:shadow-none p-3 rounded-xl text-center">
+                    <div class="text-2xl mb-1">&#x1F4BB;</div>
+                    <div class="text-xs font-semibold">C / C++</div>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Courses -->
+    <section class="max-w-screen-xl p-4 sm:px-16 mx-auto" x-data="courseFilter()">
+        <!-- Search -->
+        <div class="search-glass bg-white dark:bg-white/5 rounded-2xl p-5 mb-8 shadow-md dark:shadow-none border border-gray-200 dark:border-white/10">
+            <div class="flex flex-col md:flex-row gap-4">
+                <div class="flex-1 relative">
+                    <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 dark:text-gray-500" fill="none"
+                        stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                    <input type="text" x-model="searchQuery" placeholder="Search courses..."
+                        class="search-input w-full pl-12 pr-4 py-3 rounded-xl bg-gray-50 dark:bg-white/5 text-gray-800 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 border border-gray-200 dark:border-white/10 outline-none text-sm">
+                </div>
+                <select x-model="categoryFilter"
+                    class="search-input px-4 py-3 rounded-xl bg-gray-50 dark:bg-white/5 text-gray-800 dark:text-white border border-gray-200 dark:border-white/10 outline-none text-sm">
+                    <option value="all" class="bg-gray-900">All Categories</option>
+                    <option value="Python" class="bg-gray-900">Python</option>
+                    <option value="JavaScript" class="bg-gray-900">JavaScript</option>
+                    <option value="Web Development" class="bg-gray-900">Web Development</option>
+                    <option value="Java" class="bg-gray-900">Java</option>
+                    <option value="Artificial Intelligence" class="bg-gray-900">AI &amp; ML</option>
+                    <option value="Data Science" class="bg-gray-900">Data Science</option>
+                    <option value="Cybersecurity" class="bg-gray-900">Cybersecurity</option>
+                    <option value="Mobile Development" class="bg-gray-900">Mobile Dev</option>
+                    <option value="Cloud Computing" class="bg-gray-900">Cloud &amp; DevOps</option>
+                    <option value="Design" class="bg-gray-900">Design &amp; Graphics</option>
+                    <option value="Digital Marketing" class="bg-gray-900">Marketing</option>
+                    <option value="Finance" class="bg-gray-900">Finance</option>
+                    <option value="Programming" class="bg-gray-900">C / C++</option>
+                </select>
+            </div>
+            <div class="mt-3 flex items-center justify-between">
+                <p class="text-gray-500 text-sm">
+                    Showing <span class="font-semibold text-violet-400" x-text="filteredCourses().length"></span>
+                    courses
+                </p>
+                <button @click="resetFilters()"
+                    class="text-violet-400 hover:text-violet-300 font-semibold text-sm transition">Reset</button>
+            </div>
+        </div>
+
+        <!-- Grid -->
+        <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mb-20">
+            <template x-for="(course, index) in filteredCourses()" :key="index">
+                <div class="course-card bg-white dark:bg-white/5 shadow-lg dark:shadow-none rounded-2xl flex flex-col justify-between overflow-hidden border border-gray-100 dark:border-white/10">
+                    <div>
+                        <div class="relative overflow-hidden">
+                            <img :src="course.image" :alt="course.name"
+                                class="w-full h-48 object-cover transition-transform duration-500 hover:scale-110">
+                            <div class="img-overlay absolute inset-0"></div>
+                            <div
+                                class="absolute top-3 right-3 badge-free px-3 py-1 rounded-full text-xs font-bold tracking-wide shadow-lg">
+                                FREE</div>
+                            <div class="absolute bottom-3 left-3">
+                                <span class="category-badge text-xs px-3 py-1 rounded-full font-medium"
+                                    x-text="course.category"></span>
+                            </div>
+                        </div>
+                        <div class="p-5">
+                            <h2 class="text-lg font-bold mb-2 line-clamp-2 text-gray-800 dark:text-white/95" x-text="course.name"></h2>
+                            <p class="text-gray-600 dark:text-gray-400 text-sm mb-4 line-clamp-2 leading-relaxed"
+                                x-text="course.description"></p>
+                            <div class="flex items-center gap-3 mb-3">
+                                <span class="text-gray-400 dark:text-gray-600 line-through text-sm">$<span
+                                        x-text="course.actual_price_usd || '199.99'"></span></span>
+                                <span class="text-emerald-500 dark:text-emerald-400 font-bold text-lg">FREE</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex gap-3 p-5 pt-0">
+                        <a :href="course.url" target="_blank"
+                            class="btn-enroll flex-1 text-white px-4 py-2.5 rounded-xl text-center font-semibold text-sm flex items-center justify-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                            </svg>
+                            Enroll Free
+                        </a>
+                        <a :href="course.video_url" target="_blank"
+                            class="btn-video flex-1 text-white px-4 py-2.5 rounded-xl text-center font-semibold text-sm flex items-center justify-center gap-2">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M8 5v14l11-7z" />
+                            </svg>
+                            Watch Video
+                        </a>
+                    </div>
+                </div>
+            </template>
+        </div>
+
+        <!-- No Results -->
+        <div x-show="filteredCourses().length === 0" class="text-center py-20">
+            <div
+                class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-violet-100 dark:bg-violet-500/10 border border-violet-200 dark:border-violet-500/20 mb-4">
+                <svg class="h-10 w-10 text-violet-500 dark:text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+            </div>
+            <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-2">No courses found</h3>
+            <p class="text-gray-500">Try adjusting your search or filters</p>
+        </div>
+    </section>
+
+    <div id="course-data" style="display:none">
+        <%= JSON.stringify(courses) %>
+    </div>
+    <script>
+        var _courseData = JSON.parse(document.getElementById('course-data').textContent);
+        function courseFilter() {
+            return {
+                searchQuery: '',
+                categoryFilter: 'all',
+                courses: _courseData,
+                filteredCourses() {
+                    let filtered = this.courses;
+                    if (this.searchQuery) {
+                        const query = this.searchQuery.toLowerCase();
+                        filtered = filtered.filter(function (course) {
+                            return course.name.toLowerCase().includes(query) ||
+                                course.category.toLowerCase().includes(query) ||
+                                course.description.toLowerCase().includes(query);
+                        });
+                    }
+                    if (this.categoryFilter !== 'all') {
+                        var cat = this.categoryFilter.toLowerCase();
+                        filtered = filtered.filter(function (course) {
+                            return course.category.toLowerCase().includes(cat);
+                        });
+                    }
+                    return filtered;
+                },
+                resetFilters() {
+                    this.searchQuery = '';
+                    this.categoryFilter = 'all';
+                },
+                quickFilter(query) {
+                    this.searchQuery = query;
+                    this.categoryFilter = 'all';
+                    var grid = document.querySelector('.grid');
+                    if (grid) {
+                        setTimeout(function () { grid.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100);
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>
