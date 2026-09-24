@@ -1,187 +1,109 @@
 <!DOCTYPE html>
-<html lang="en" x-data="{ darkMode: localStorage.getItem('darkMode') === 'true' || (!('darkMode' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches) }" x-init="$watch('darkMode', val => localStorage.setItem('darkMode', val)); darkMode ? document.documentElement.classList.add('dark') : document.documentElement.classList.remove('dark')" :class="{ 'dark': darkMode }">
+<html lang="en" 
+      x-data="{ darkMode: localStorage.getItem('darkMode') === 'true' || (!('darkMode' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches) }" 
+      x-init="$watch('darkMode', val => localStorage.setItem('darkMode', val)); darkMode ? document.documentElement.classList.add('dark') : document.documentElement.classList.remove('dark')" 
+      :class="{ 'dark': darkMode }">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin — Quizzes</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="shortcut icon"
-    href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAQHwjXyAiIxUCnh3-cFywq0K4ZmDFo20YAw&s">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
-    rel="stylesheet">
-  <style>
-    * {
-      font-family: 'Poppins', sans-serif;
-    }
-
-    /* Hardcoded body background removed for dark mode */
-
-    .nav-glass {
-      background: rgba(15, 12, 41, 0.85);
-      backdrop-filter: blur(20px);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    }
-
-    .glass-card {
-      background: rgba(255, 255, 255, 0.06);
-      backdrop-filter: blur(15px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .dots-pattern {
-      background-image: radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px);
-      background-size: 30px 30px;
-    }
-
-    .quiz-item {
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      transition: all 0.3s;
-    }
-
-    .quiz-item:hover {
-      background: rgba(139, 92, 246, 0.08);
-      border-color: rgba(139, 92, 246, 0.2);
-    }
-
-    .btn-create {
-      background: linear-gradient(135deg, #43e97b, #38f9d7);
-      color: #0f0c29;
-      transition: all 0.3s;
-    }
-
-    .btn-create:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(67, 233, 123, 0.3);
-    }
-
-    .btn-edit {
-      background: rgba(139, 92, 246, 0.15);
-      border: 1px solid rgba(139, 92, 246, 0.3);
-      transition: all 0.3s;
-    }
-
-    .btn-edit:hover {
-      background: rgba(139, 92, 246, 0.25);
-    }
-
-    .btn-delete {
-      background: rgba(245, 87, 108, 0.15);
-      border: 1px solid rgba(245, 87, 108, 0.3);
-      transition: all 0.3s;
-    }
-
-    .btn-delete:hover {
-      background: rgba(245, 87, 108, 0.25);
-    }
-  </style>
-    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <%- include('partials/head', { title: 'Admin — Quiz Management' }) %>
 </head>
 
-<body class="dots-pattern  bg-gray-50 dark:bg-[#0f0c29] text-gray-800 dark:text-white transition-colors duration-300 min-h-screen" :style="darkMode ? 'background: linear-gradient(180deg, #0f0c29 0%, #1a1440 30%, #1e1848 60%, #24243e 100%);' : 'background: #f8fafc;'">
+<body class="dots-pattern bg-slate-50 dark:bg-[#0f0c29] text-slate-800 dark:text-white transition-colors duration-300 min-h-screen flex flex-col"
+      :style="darkMode ? 'background: linear-gradient(180deg, #0f0c29 0%, #1a1440 30%, #1e1848 60%, #24243e 100%);' : 'background: #f8fafc;'">
 
-  <nav class="nav-glass p-4 sticky top-0 z-50">
-    <div class="max-w-screen-xl p-2 sm:px-16 mx-auto flex justify-between items-center">
-      <a href="/" class="flex items-center gap-2">
-        <div
-          class="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center shadow-lg">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24"
-            stroke="currentColor" stroke-width="2.5">
-            <path stroke-linecap="round" stroke-linejoin="round"
-              d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-          </svg>
+  <!-- Ambient Glow -->
+  <div class="orb orb-purple w-96 h-96 -top-20 -left-20"></div>
+
+  <!-- Navbar Component -->
+  <%- include('partials/navbar') %>
+
+  <!-- Main Container -->
+  <main class="flex-1 max-w-screen-xl w-full px-4 sm:px-8 lg:px-12 mx-auto py-10 relative z-10">
+    
+    <!-- Top Action Bar -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+      <div>
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-violet-100 dark:bg-violet-500/15 border border-violet-200 dark:border-violet-500/30 text-violet-700 dark:text-violet-300 text-xs font-semibold mb-2">
+          <span>⚙️ Content Management</span>
         </div>
-        <span class="text-white text-xl font-bold">EduVerse</span>
-      </a>
-      <div class="hidden md:flex items-center space-x-6 text-sm font-medium">
-        <a href="/" class="text-gray-400 hover:text-white transition">Home</a>
-        <% if (user && user.role !=='user' ) { %>
-          <a href="/admin/quiz" class="text-violet-400 font-semibold">Admin</a>
-          <a href="/contacts" class="text-gray-400 hover:text-white transition">Queries</a>
-          <% } %>
-            <a href="/courses" class="text-gray-400 hover:text-white transition">Courses</a>
-            <a href="/leaderboard" class="text-gray-400 hover:text-white transition">Results</a>
-            <a href="/contact" class="text-gray-400 hover:text-white transition">Contact</a>
-            <a href="/profile" class="text-gray-400 hover:text-white transition">
-              <span
-                class="bg-violet-500/20 border border-violet-500/30 text-violet-300 px-3 py-1 rounded-lg text-xs font-semibold">
-                <%= user.name %>
-              </span>
-            </a>
-            
-                <!-- Dark Mode Toggle -->
-                <div @click="darkMode = !darkMode" class="dark-mode-toggle text-gray-600 dark:text-gray-300 cursor-pointer p-2 rounded-full hover:bg-violet-500/10 transition-colors" title="Toggle Dark/Light Mode">
-                    <svg x-show="!darkMode" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
-                    <svg x-show="darkMode" x-cloak class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-                </div>
-                <a href="/logout" class="text-gray-500 hover:text-red-400 transition">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-              </svg>
-            </a>
+        <h1 class="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">Quiz Administration</h1>
+        <p class="text-slate-500 dark:text-slate-400 text-sm mt-0.5">Author, revise questions, and monitor participation rates.</p>
       </div>
-    </div>
-  </nav>
 
-  <div class="max-w-screen-xl p-4 sm:px-16 mx-auto py-8">
-    <div class="flex justify-between items-center mb-6">
-      <h1 class="text-3xl font-extrabold">⚙️ Quiz Admin</h1>
-      <a href="/admin/quiz/create" class="btn-create px-6 py-2.5 rounded-xl font-bold text-sm flex items-center gap-2">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <a href="/admin/quiz/create" class="btn-gradient px-5 py-2.5 rounded-xl font-bold text-xs flex items-center justify-center gap-2 shadow-lg hover:shadow-violet-500/25 transition-all">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4" />
         </svg>
-        Create Quiz
+        <span>Create New Quiz</span>
       </a>
     </div>
 
-    <div class="glass-card rounded-2xl p-6">
-      <% if (quizzes.length> 0) { %>
-        <div class="space-y-3">
-          <% quizzes.forEach((quiz, index)=> { %>
-            <div class="quiz-item rounded-xl p-5 flex justify-between items-center">
-              <div>
-                <h2 class="text-base font-semibold text-white">
-                  <%= index + 1 %>. <%= quiz.quiz_name %>
-                </h2>
-                <p class="text-gray-500 text-sm mt-1">
-                  <%= quiz.description %>
-                </p>
-                <p class="text-violet-400 text-xs mt-1 font-medium">Attempts: <%= quiz.attempts %>
+    <!-- Quizzes List Card -->
+    <div class="glass-card rounded-2xl p-6 sm:p-8">
+      <% if (quizzes && quizzes.length > 0) { %>
+        <div class="space-y-3.5">
+          <% quizzes.forEach((quiz, index) => { %>
+            <div class="glass-item rounded-2xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div class="space-y-1.5 flex-1">
+                <div class="flex items-center gap-2 flex-wrap">
+                  <span class="w-6 h-6 rounded-lg bg-violet-100 dark:bg-violet-500/20 text-violet-700 dark:text-violet-300 flex items-center justify-center text-xs font-bold">
+                    <%= index + 1 %>
+                  </span>
+                  <h2 class="text-base font-bold text-slate-900 dark:text-white">
+                    <%= quiz.quiz_name %>
+                  </h2>
+                  <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-violet-50 dark:bg-violet-500/10 text-violet-700 dark:text-violet-300 border border-violet-200/60 dark:border-violet-500/20">
+                    <%= quiz.attempts || 0 %> attempts
+                  </span>
+                </div>
+                <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed pl-8">
+                  <%= quiz.description || 'No description specified.' %>
                 </p>
               </div>
-              <div class="flex gap-2 flex-shrink-0 ml-4">
+
+              <!-- Admin Action Buttons -->
+              <div class="flex items-center gap-2 flex-shrink-0 pl-8 sm:pl-0">
                 <a href="/admin/quiz/edit/<%= quiz.id %>"
-                  class="btn-edit text-violet-300 px-4 py-2 rounded-xl text-sm font-medium flex items-center gap-1.5">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                   class="px-3.5 py-2 rounded-xl text-xs font-semibold bg-violet-50 hover:bg-violet-100 dark:bg-violet-500/15 dark:hover:bg-violet-500/25 text-violet-700 dark:text-violet-300 border border-violet-200 dark:border-violet-500/30 transition-all flex items-center gap-1.5 shadow-sm">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                   </svg>
-                  Edit
+                  <span>Edit</span>
                 </a>
-                <form action="/admin/quiz/delete/<%= quiz.id %>" method="POST" class="inline">
+
+                <form action="/admin/quiz/delete/<%= quiz.id %>" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this quiz? This action cannot be undone.')">
                   <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
                   <button type="submit"
-                    class="btn-delete text-red-300 px-4 py-2 rounded-xl text-sm font-medium flex items-center gap-1.5">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                          class="px-3.5 py-2 rounded-xl text-xs font-semibold bg-rose-50 hover:bg-rose-100 dark:bg-rose-500/15 dark:hover:bg-rose-500/25 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-500/30 transition-all flex items-center gap-1.5 shadow-sm">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                     </svg>
-                    Delete
+                    <span>Delete</span>
                   </button>
                 </form>
               </div>
             </div>
-            <% }) %>
+          <% }) %>
         </div>
-        <% } else { %>
-          <div class="text-center py-12">
-            <p class="text-gray-400">No quizzes available. Create your first quiz!</p>
+      <% } else { %>
+        <div class="text-center py-16">
+          <div class="w-16 h-16 rounded-2xl bg-violet-100 dark:bg-violet-500/15 text-violet-600 dark:text-violet-400 flex items-center justify-center mx-auto mb-4">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
           </div>
-          <% } %>
+          <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-1">No quizzes created yet</h3>
+          <p class="text-slate-500 dark:text-slate-400 text-sm max-w-sm mx-auto mb-6">
+            Get started by creating your very first interactive quiz assessment for students.
+          </p>
+          <a href="/admin/quiz/create" class="btn-gradient px-5 py-2.5 rounded-xl text-xs font-semibold shadow-md inline-block">
+            Create First Quiz
+          </a>
+        </div>
+      <% } %>
     </div>
-  </div>
-</body>
+  </main>
 
+  <!-- Footer Component -->
+  <%- include('partials/footer') %>
+
+</body>
 </html>

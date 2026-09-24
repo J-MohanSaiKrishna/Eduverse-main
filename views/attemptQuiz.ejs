@@ -1,251 +1,253 @@
 <!DOCTYPE html>
-<html lang="en"
-  x-data="{ darkMode: localStorage.getItem('darkMode') === 'true' || (!('darkMode' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches) }"
-  x-init="$watch('darkMode', val => localStorage.setItem('darkMode', val)); darkMode ? document.documentElement.classList.add('dark') : document.documentElement.classList.remove('dark')"
-  :class="{ 'dark': darkMode }">
+<html lang="en" 
+      x-data="{ darkMode: localStorage.getItem('darkMode') === 'true' || (!('darkMode' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches) }" 
+      x-init="$watch('darkMode', val => localStorage.setItem('darkMode', val)); darkMode ? document.documentElement.classList.add('dark') : document.documentElement.classList.remove('dark')" 
+      :class="{ 'dark': darkMode }">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quiz</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <%- include('partials/head', { title: 'Take Quiz Challenge' }) %>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <link rel="shortcut icon"
-    href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAQHwjXyAiIxUCnh3-cFywq0K4ZmDFo20YAw&s">
-  <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 
-<body class=" bg-gray-50 dark:bg-[#0f0c29] text-gray-800 dark:text-white transition-colors duration-300 min-h-screen"
-  :style="darkMode ? 'background: linear-gradient(180deg, #0f0c29 0%, #1a1440 30%, #1e1848 60%, #24243e 100%);' : 'background: #f8fafc;'">
-  <nav class="bg-gray-800 p-4">
-    <div class="max-w-screen-xl p-2 sm:px-16 mx-auto flex justify-between items-center">
-      <div class="flex items-center space-x-4">
-        <a href="/" class="text-white text-lg font-semibold flex items-center bg-white p-0.5 pe-4 rounded">
-          <img
-            src="https://images-platform.99static.com/UvWW_UabxhcKSoa-E2YXjwDHkRU=/607x286:1393x1072/500x500/top/smart/99designs-contests-attachments/131/131634/attachment_131634405"
-            width="50px" alt="">
-          <span class="text-black text-xl">Eduverse</span>
-        </a>
-      </div>
-      <div class="hidden md:flex items-center space-x-4 text-lg">
-        <a href="/" class="text-gray-300 hover:text-white">Home</a>
-        <% if (user && user.role !=='user' ) { %>
-          <a href="/admin/quiz" class="text-gray-300 hover:text-white">Admin</a>
-          <a href="/contacts" class="text-gray-300 hover:text-white">Queries</a>
-          <% } %>
-            <a href="/courses" class="text-gray-300 hover:text-white">Courses</a>
-            <a href="/leaderboard" class="text-gray-300 hover:text-white">Results</a>
-            <a href="/contact" class="text-gray-300 hover:text-white">Contact Us</a>
-            <a href="/profile" class="text-gray-300 hover:text-white">Profile
-              <span class="bg-gray-700 text-white px-2 rounded mx-1 text-sm py-1">
-                <%= user.name %>
-              </span>
-            </a>
+<body class="dots-pattern bg-slate-50 dark:bg-[#0f0c29] text-slate-800 dark:text-white transition-colors duration-300 min-h-screen flex flex-col"
+      :style="darkMode ? 'background: linear-gradient(180deg, #0f0c29 0%, #1a1440 30%, #1e1848 60%, #24243e 100%);' : 'background: #f8fafc;'">
 
-            <!-- Dark Mode Toggle -->
-            <div @click="darkMode = !darkMode"
-              class="dark-mode-toggle text-gray-600 dark:text-gray-300 cursor-pointer p-2 rounded-full hover:bg-violet-500/10 transition-colors"
-              title="Toggle Dark/Light Mode">
-              <svg x-show="!darkMode" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
-              </svg>
-              <svg x-show="darkMode" x-cloak class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z">
-                </path>
-              </svg>
+  <!-- Ambient Glow -->
+  <div class="orb orb-purple w-96 h-96 -top-20 -left-20"></div>
+  <div class="orb orb-cyan w-80 h-80 bottom-10 right-10"></div>
+
+  <!-- Navbar Component -->
+  <%- include('partials/navbar') %>
+
+  <!-- Main Quiz Container -->
+  <main class="flex-1 max-w-screen-xl w-full px-4 sm:px-8 lg:px-12 mx-auto py-10 relative z-10">
+    
+    <div class="glass-card rounded-3xl p-6 sm:p-10 shadow-2xl flex flex-col lg:flex-row gap-10">
+      
+      <!-- Quiz Questions Form Column -->
+      <div class="w-full lg:w-3/5 space-y-6">
+        <div class="flex items-center justify-between pb-6 border-b border-slate-200/80 dark:border-white/10">
+          <div>
+            <div class="inline-flex items-center gap-1.5 text-xs font-bold text-violet-600 dark:text-violet-400 uppercase tracking-wider mb-1">
+              <span>Quiz Assessment</span>
             </div>
-            <a href="/logout" class="text-gray-300 hover:text-white">Logout</a>
-      </div>
-    </div>
-  </nav>
-
-  <div class=" my-10 mx-auto p-4 max-w-screen-xl sm:px-16">
-    <div
-      class="bg-white dark:bg-white/5 rounded-2xl shadow-xl dark:shadow-none border border-gray-100 dark:border-white/10 p-8 flex flex-col lg:flex-row gap-8">
-      <!-- Quiz Form -->
-      <div class="w-full lg:w-3/5">
-        <div class="flex justify-between items-center mb-6 border-b border-gray-100 dark:border-white/10 pb-4">
-          <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Quiz Challenge</h1>
-          <div id="score" class="text-xl font-bold text-violet-600 dark:text-violet-400">
-            <!-- This will dynamically display the score -->
+            <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">Knowledge Check</h1>
+          </div>
+          <div id="score" class="text-base sm:text-lg font-bold text-emerald-600 dark:text-emerald-400 px-3 py-1.5 rounded-xl bg-emerald-50 dark:bg-emerald-500/15 border border-emerald-200 dark:border-emerald-500/30 hidden">
+            <!-- Dynamically populated score -->
           </div>
         </div>
 
-        <form id="quizForm" action="/quiz/<%= quiz_id %>/attempt" method="POST" class="space-y-4">
+        <form id="quizForm" action="/quiz/<%= quiz_id %>/attempt" method="POST" class="space-y-6">
           <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
-          <% questions.forEach((question)=> { %>
-            <div
-              class="p-5 bg-white dark:bg-gray-800/80 rounded-xl shadow-md border border-gray-100 dark:border-gray-700">
-              <p class="font-semibold text-lg text-gray-900 dark:text-white mb-4">
-                <%= question.question %>
-              </p>
 
-              <div class="space-y-3">
-                <label
-                  class="block p-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer transition-colors dark:text-gray-200">
-                  <input type="radio" name="answers[<%= question.id %>]" value="a" class="mr-3" required>
-                  <span class="option-text">
-                    <%= question.option_a %>
-                  </span>
+          <% questions.forEach((question, qIdx) => { %>
+            <div class="p-6 rounded-2xl bg-white dark:bg-white/[0.03] border border-slate-200/80 dark:border-white/10 shadow-sm space-y-4">
+              <div class="flex items-start gap-3">
+                <span class="w-7 h-7 rounded-xl bg-violet-100 dark:bg-violet-500/20 text-violet-700 dark:text-violet-300 flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">
+                  <%= qIdx + 1 %>
+                </span>
+                <p class="font-bold text-base text-slate-900 dark:text-white leading-relaxed">
+                  <%= question.question %>
+                </p>
+              </div>
+
+              <div class="space-y-2.5 pl-10">
+                <label class="block p-3.5 rounded-xl border border-slate-200 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-white/5 cursor-pointer transition-all option-label">
+                  <div class="flex items-center gap-3">
+                    <input type="radio" name="answers[<%= question.id %>]" value="a" required class="w-4 h-4 text-violet-600 focus:ring-violet-500">
+                    <span class="text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-200"><%= question.option_a %></span>
+                  </div>
                 </label>
-                <label
-                  class="block p-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer transition-colors dark:text-gray-200">
-                  <input type="radio" name="answers[<%= question.id %>]" value="b" class="mr-3" required>
-                  <span class="option-text">
-                    <%= question.option_b %>
-                  </span>
+
+                <label class="block p-3.5 rounded-xl border border-slate-200 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-white/5 cursor-pointer transition-all option-label">
+                  <div class="flex items-center gap-3">
+                    <input type="radio" name="answers[<%= question.id %>]" value="b" required class="w-4 h-4 text-violet-600 focus:ring-violet-500">
+                    <span class="text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-200"><%= question.option_b %></span>
+                  </div>
                 </label>
-                <label
-                  class="block p-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer transition-colors dark:text-gray-200">
-                  <input type="radio" name="answers[<%= question.id %>]" value="c" class="mr-3" required>
-                  <span class="option-text">
-                    <%= question.option_c %>
-                  </span>
+
+                <label class="block p-3.5 rounded-xl border border-slate-200 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-white/5 cursor-pointer transition-all option-label">
+                  <div class="flex items-center gap-3">
+                    <input type="radio" name="answers[<%= question.id %>]" value="c" required class="w-4 h-4 text-violet-600 focus:ring-violet-500">
+                    <span class="text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-200"><%= question.option_c %></span>
+                  </div>
                 </label>
-                <label
-                  class="block p-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer transition-colors dark:text-gray-200">
-                  <input type="radio" name="answers[<%= question.id %>]" value="d" class="mr-3" required>
-                  <span class="option-text">
-                    <%= question.option_d %>
-                  </span>
+
+                <label class="block p-3.5 rounded-xl border border-slate-200 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-white/5 cursor-pointer transition-all option-label">
+                  <div class="flex items-center gap-3">
+                    <input type="radio" name="answers[<%= question.id %>]" value="d" required class="w-4 h-4 text-violet-600 focus:ring-violet-500">
+                    <span class="text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-200"><%= question.option_d %></span>
+                  </div>
                 </label>
               </div>
             </div>
-            <% }) %>
+          <% }) %>
 
-              <button type="submit"
-                class="w-full py-3.5 mt-6 bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-500 hover:to-purple-500 text-white font-bold rounded-xl shadow-lg hover:shadow-violet-500/30 transition-all duration-300 hover:-translate-y-0.5">Submit
-                Answers</button>
+          <button type="submit" id="submitBtn"
+                  class="btn-gradient w-full py-4 rounded-2xl font-bold text-sm tracking-wide shadow-xl flex items-center justify-center gap-2">
+            <span>Submit Answers & Calculate Score</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
+          </button>
         </form>
       </div>
 
-      <!-- Feedback Section -->
-      <div id="feedback"
-        class="w-full lg:w-2/5 bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/20 p-6 rounded-xl hidden flex flex-col">
-        <div class="flex items-center gap-3 mb-4">
-          <div
-            class="w-10 h-10 rounded-full bg-emerald-100 dark:bg-emerald-500/20 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-            </svg>
+      <!-- Feedback & Analytics Column (Revealed upon Submission) -->
+      <div id="feedback" class="w-full lg:w-2/5 hidden flex-col space-y-6">
+        <div class="p-6 rounded-2xl bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/20 shadow-md">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-10 h-10 rounded-xl bg-emerald-100 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-300 flex items-center justify-center">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+            </div>
+            <div>
+              <h2 class="text-lg font-bold text-emerald-900 dark:text-emerald-200">Results Summary</h2>
+              <p class="text-xs text-emerald-700 dark:text-emerald-400">Personalized feedback analysis</p>
+            </div>
           </div>
-          <h2 class="text-xl font-bold text-emerald-800 dark:text-emerald-300">Results Feedback</h2>
+
+          <div id="feedbackContent" class="text-xs sm:text-sm text-emerald-900 dark:text-emerald-100 leading-relaxed bg-white/70 dark:bg-black/30 p-4 rounded-xl border border-emerald-200/50 dark:border-white/5 mb-6">
+          </div>
+
+          <div class="w-full h-64 relative">
+            <canvas id="myChart" class="w-full h-full"></canvas>
+          </div>
         </div>
 
-        <p id="feedbackContent"
-          class="text-emerald-700 dark:text-emerald-200 font-medium mb-6 bg-white/50 dark:bg-black/20 p-4 rounded-lg">
-        </p>
-
-        <section class="flex-1 w-full min-h-[300px] relative">
-          <canvas id="myChart" class="absolute inset-0 w-full h-full"></canvas>
-        </section>
+        <div class="flex items-center gap-3">
+          <a href="/" class="btn-gradient flex-1 py-3 rounded-xl text-center font-bold text-xs shadow-md">
+            Explore More Quizzes
+          </a>
+          <a href="/leaderboard" class="px-4 py-3 rounded-xl text-center font-bold text-xs bg-slate-100 dark:bg-white/10 text-slate-700 dark:text-slate-200 hover:bg-slate-200 transition-colors">
+            Leaderboard
+          </a>
+        </div>
       </div>
+
     </div>
 
-  </div>
+  </main>
 
+  <!-- Footer Component -->
+  <%- include('partials/footer') %>
+
+  <!-- Interactive Score & Chart Evaluation Script -->
   <script>
-    document.getElementById('quizForm').addEventListener('submit', async function (event) {
-      event.preventDefault();
-
-      const formData = new FormData(this);
-      const response = await fetch(this.action, {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-        },
-        body: new URLSearchParams(formData)
-      });
-
-      const result = await response.json();
-
-      document.querySelectorAll('label').forEach(label => {
-        label.classList.remove('bg-emerald-200', 'bg-red-200');
-      });
-
-      // Initialize score to 0
-      let score = 0;
-
-      // Highlight the options based on the correct and user-selected answers
-      result.correctAnswers.forEach((correctAnswer) => {
-        const questionId = correctAnswer.id;
-        const correctOption = correctAnswer.correct_answer;
-
-        const selectedOption = formData.get(`answers[${questionId}]`);
-
-        // Highlight the user's selected answer
-        document.querySelectorAll(`input[name="answers[${questionId}]"]`).forEach(input => {
-          const label = input.closest('label');
-
-          if (input.value === selectedOption) {
-            if (input.value === correctOption) {
-              label.classList.add('bg-emerald-200'); // Correct answer
-              score++; // Increase score if correct
-            } else {
-              label.classList.add('bg-red-200'); // Incorrect answer
-            }
-          }
-
-          // Highlight the correct answer
-          if (input.value === correctOption) {
-            label.classList.add('bg-emerald-200');
-          }
-        });
-      });
-
-      // Show the score in the top right
-      document.getElementById('score').textContent = `Score: ${score}/${result.totalQuestions}`;
-
-      // Calculate the percentage
-      const percentage = Math.round((score / result.totalQuestions) * 100);
-
-      // Update the pie chart data
-      myChart.data.datasets[0].data = [100 - percentage, percentage]; // Remaining and Scored
-      myChart.update();  // Re-render the chart
-
-      // Display feedback
-      if (result.feedback) {
-        document.getElementById('feedback').classList.remove('hidden');
-        document.getElementById('feedbackContent').textContent = result.feedback;
-      }
-    });
-
-    // Initialize the pie chart
     var ctx = document.getElementById('myChart').getContext('2d');
     var myChart = new Chart(ctx, {
-      type: 'pie',
+      type: 'doughnut',
       data: {
-        labels: ['Remaining', 'Scored'],
+        labels: ['Incorrect / Missed', 'Correct'],
         datasets: [{
-          data: [100, 0],  // Initially, 100% remaining, 0% scored
+          data: [100, 0],
           backgroundColor: [
-            'rgba(255, 99, 132, 0.7)', // Red for Remaining
-            'rgba(54, 162, 235, 0.7)', // Blue for Scored
+            'rgba(244, 63, 94, 0.8)',
+            'rgba(16, 185, 129, 0.8)',
           ],
           borderColor: [
-            'rgba(255, 99, 132, 1)', // Red border
-            'rgba(54, 162, 235, 1)', // Blue border
+            'rgba(244, 63, 94, 1)',
+            'rgba(16, 185, 129, 1)',
           ],
-          borderWidth: 1
+          borderWidth: 2
         }]
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
-        legend: {
-          position: 'bottom',
-          labels: {
-            fontColor: 'black',
-            fontSize: 14,
-            padding: 20
+        plugins: {
+          legend: {
+            position: 'bottom',
+            labels: {
+              boxWidth: 12,
+              padding: 15,
+              font: {
+                family: 'Poppins',
+                size: 11
+              }
+            }
           }
         }
       }
     });
-  </script>
-</body>
 
+    document.getElementById('quizForm').addEventListener('submit', async function (event) {
+      event.preventDefault();
+      const submitBtn = document.getElementById('submitBtn');
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = 'Evaluating answers...';
+
+      try {
+        const formData = new FormData(this);
+        const response = await fetch(this.action, {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+          },
+          body: new URLSearchParams(formData)
+        });
+
+        const result = await response.json();
+
+        // Reset highlights
+        document.querySelectorAll('.option-label').forEach(label => {
+          label.classList.remove('bg-emerald-100', 'dark:bg-emerald-500/20', 'border-emerald-500', 'bg-rose-100', 'dark:bg-rose-500/20', 'border-rose-500');
+        });
+
+        let score = 0;
+
+        if (result.correctAnswers && Array.isArray(result.correctAnswers)) {
+          result.correctAnswers.forEach((correctAnswer) => {
+            const questionId = correctAnswer.id;
+            const correctOption = String(correctAnswer.correct_answer || '').trim().toLowerCase();
+            const selectedOption = String(formData.get(`answers[${questionId}]`) || '').trim().toLowerCase();
+
+            document.querySelectorAll(`input[name="answers[${questionId}]"]`).forEach(input => {
+              const label = input.closest('label');
+              const val = String(input.value || '').trim().toLowerCase();
+
+              if (val === selectedOption) {
+                if (val === correctOption) {
+                  label.classList.add('bg-emerald-100', 'dark:bg-emerald-500/20', 'border-emerald-500');
+                  score++;
+                } else {
+                  label.classList.add('bg-rose-100', 'dark:bg-rose-500/20', 'border-rose-500');
+                }
+              }
+
+              if (val === correctOption) {
+                label.classList.add('bg-emerald-100', 'dark:bg-emerald-500/20', 'border-emerald-500');
+              }
+            });
+          });
+        }
+
+        // Show Score
+        const scoreElem = document.getElementById('score');
+        scoreElem.textContent = `Score: ${score} / ${result.totalQuestions || 0} (${result.score || 0}%)`;
+        scoreElem.classList.remove('hidden');
+
+        // Update Chart
+        const percentage = Math.round(Number(result.score) || 0);
+        myChart.data.datasets[0].data = [Math.max(0, 100 - percentage), percentage];
+        myChart.update();
+
+        // Display Feedback
+        const feedbackDiv = document.getElementById('feedback');
+        feedbackDiv.classList.remove('hidden');
+        feedbackDiv.classList.add('flex');
+        document.getElementById('feedbackContent').textContent = result.feedback || `You scored ${percentage}%. Great effort! Review incorrect questions to solidify key concepts.`;
+
+        // Smooth scroll to results
+        feedbackDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+        submitBtn.innerHTML = 'Assessment Completed';
+      } catch (err) {
+        console.error('Quiz evaluation error:', err);
+        alert('An error occurred submitting the quiz. Please try again.');
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = 'Submit Answers & Calculate Score';
+      }
+    });
+  </script>
+
+</body>
 </html>

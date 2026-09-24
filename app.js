@@ -24,7 +24,9 @@ app.use(session({
 }));
 
 app.use((req, res, next) => {
-  res.locals.username = req.session.username || null; 
+  res.locals.user = req.session.user || null;
+  res.locals.username = req.session.user ? req.session.user.name : (req.session.username || null);
+  res.locals.currentPath = req.path;
   next();
 });
 

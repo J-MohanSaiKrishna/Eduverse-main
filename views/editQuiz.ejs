@@ -1,117 +1,214 @@
 <!DOCTYPE html>
-<html lang="en" x-data="{ darkMode: localStorage.getItem('darkMode') === 'true' || (!('darkMode' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches) }" x-init="$watch('darkMode', val => localStorage.setItem('darkMode', val)); darkMode ? document.documentElement.classList.add('dark') : document.documentElement.classList.remove('dark')" :class="{ 'dark': darkMode }">
+<html lang="en" 
+      x-data="{ darkMode: localStorage.getItem('darkMode') === 'true' || (!('darkMode' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches) }" 
+      x-init="$watch('darkMode', val => localStorage.setItem('darkMode', val)); darkMode ? document.documentElement.classList.add('dark') : document.documentElement.classList.remove('dark')" 
+      :class="{ 'dark': darkMode }">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Quiz</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link rel="shortcut icon" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAQHwjXyAiIxUCnh3-cFywq0K4ZmDFo20YAw&s">
-    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <%- include('partials/head', { title: 'Admin — Edit Quiz' }) %>
 </head>
-<body class="  bg-gray-50 dark:bg-[#0f0c29] text-gray-800 dark:text-white transition-colors duration-300 min-h-screen" :style="darkMode ? 'background: linear-gradient(180deg, #0f0c29 0%, #1a1440 30%, #1e1848 60%, #24243e 100%);' : 'background: #f8fafc;'">
-    <nav class="bg-gray-800 p-4">
-        <div class="max-w-screen-xl p-2 sm:px-16 mx-auto flex justify-between items-center">
-            <div class="flex items-center space-x-4">
-              <a href="/" class="text-white text-lg font-semibold flex items-center bg-white p-0.5 pe-4 rounded">
-                <img src="https://images-platform.99static.com/UvWW_UabxhcKSoa-E2YXjwDHkRU=/607x286:1393x1072/500x500/top/smart/99designs-contests-attachments/131/131634/attachment_131634405" width="50px" alt="">
-                <span class="text-black text-xl">Eduverse</span>
-            </a>
-            </div>
-            <div class="hidden md:flex items-center space-x-4 text-lg">
-                <a href="/" class="text-gray-300 hover:text-white">Home</a>
-                <% if (user && user.role !== 'user') { %>  
-                <a href="/admin/quiz" class="text-gray-300 hover:text-white">Admin</a>
-                <a href="/contacts" class="text-gray-300 hover:text-white">Queries</a>
-                <% } %>
-                <a href="/courses" class="text-gray-300 hover:text-white">Courses</a>
-                <a href="/leaderboard" class="text-gray-300 hover:text-white">Results</a>
-                <a href="/contact" class="text-gray-300 hover:text-white">Contact Us</a>
-                <a href="/profile" class="text-gray-300 hover:text-white">Profile
-                  <span class="bg-gray-700 text-white px-2 rounded mx-1 text-sm py-1"><%= user.name %></span>
-                </a>
-                
-                <!-- Dark Mode Toggle -->
-                <div @click="darkMode = !darkMode" class="dark-mode-toggle text-gray-600 dark:text-gray-300 cursor-pointer p-2 rounded-full hover:bg-violet-500/10 transition-colors" title="Toggle Dark/Light Mode">
-                    <svg x-show="!darkMode" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
-                    <svg x-show="darkMode" x-cloak class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-                </div>
-                <a href="/logout" class="text-gray-300 hover:text-white">Logout</a>
-            </div>
-        </div>
-      </nav>
 
-    <div class="max-w-screen-xl p-4 sm:px-16 mx-auto">
-        <div class="bg-white p-6 rounded-lg shadow-md my-8">
-            <h2 class="text-2xl font-semibold mb-4 text-center">Edit Quiz</h2>
-            
-            <form action="/admin/quiz/<%= quizId %>/update" method="POST">
-                <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+<body class="dots-pattern bg-slate-50 dark:bg-[#0f0c29] text-slate-800 dark:text-white transition-colors duration-300 min-h-screen flex flex-col"
+      :style="darkMode ? 'background: linear-gradient(180deg, #0f0c29 0%, #1a1440 30%, #1e1848 60%, #24243e 100%);' : 'background: #f8fafc;'">
+
+  <!-- Ambient Glow -->
+  <div class="orb orb-purple w-96 h-96 -top-20 -right-20"></div>
+
+  <!-- Navbar Component -->
+  <%- include('partials/navbar') %>
+
+  <!-- Main Container -->
+  <main class="flex-1 max-w-screen-xl w-full px-4 sm:px-8 lg:px-12 mx-auto py-10 relative z-10">
     
-                <div class="flex space-x-8 w-100 p-4">
-                    <div class="w-3/5">
-                        <div class="mb-4">
-                            <label for="quiz_name" class="block  font-medium text-gray-700">Quiz Name</label>
-                            <input type="text" id="quiz_name" name="quiz_name" value="<%= quiz.quiz_name %>" placeholder="Quiz Name" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200" />
-                        </div>
-            
-                        <div id="questions">
-                            <% quiz.questions.forEach((question, index) => { %>
-                                <div class="mb-4 border p-4 rounded-md">
-                                    <h3 class="font-semibold mb-2">Question <%= index + 1 %></h3>
-                                    <input type="hidden" name="questions[<%= index %>][question_id]" value="<%= question.question_id %>" />
-                                    <input type="text" name="questions[<%= index %>][question]" value="<%= question.question %>" placeholder="Question" required class="block w-full p-2 border border-gray-300 rounded-md mb-2 focus:outline-none focus:ring focus:ring-blue-200" />
-                                    <input type="text" name="questions[<%= index %>][option_a]" value="<%= question.option_a %>" placeholder="Option A" required class="block w-full p-2 border border-gray-300 rounded-md mb-2 focus:outline-none focus:ring focus:ring-blue-200" />
-                                    <input type="text" name="questions[<%= index %>][option_b]" value="<%= question.option_b %>" placeholder="Option B" required class="block w-full p-2 border border-gray-300 rounded-md mb-2 focus:outline-none focus:ring focus:ring-blue-200" />
-                                    <input type="text" name="questions[<%= index %>][option_c]" value="<%= question.option_c %>" placeholder="Option C" required class="block w-full p-2 border border-gray-300 rounded-md mb-2 focus:outline-none focus:ring focus:ring-blue-200" />
-                                    <input type="text" name="questions[<%= index %>][option_d]" value="<%= question.option_d %>" placeholder="Option D" required class="block w-full p-2 border border-gray-300 rounded-md mb-2 focus:outline-none focus:ring focus:ring-blue-200" />
-                                    <input type="text" name="questions[<%= index %>][correct_answer]" value="<%= question.correct_answer %>" placeholder="Correct Answer" required class="block w-full p-2 border border-gray-300 rounded-md mb-2 focus:outline-none focus:ring focus:ring-blue-200" />
-                                </div>
-                            <% }) %>
-                        </div>
-                    </div>
-                    <div class="bg-gray-100 rounded-lg p-4 w-2/5 h-fit">
-                         <!-- Description -->
-                        <div class="mb-4">
-                            <label for="description" class="block  font-medium text-gray-700">Description</label>
-                            <textarea id="description" name="description" placeholder="Enter quiz description" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200"><%= quiz.description %></textarea>
-                        </div>
-    
-                        <!-- Send Email -->
-                        <div class="mb-4">
-                            <label for="send_email" class="block  font-medium text-gray-700">Send Email Notification</label>
-                            <select id="send_email" name="send_email" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200">
-                                <option value="1" <%= quiz.send_email === 1 ? 'selected' : '' %>>Yes</option>
-                                <option value="0" <%= quiz.send_email === 0 ? 'selected' : '' %>>No</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                
-                <button type="button" id="addQuestion" class="mb-4 w-full bg-blue-600 text-white p-2 rounded-md hover:bg-blue-500">Add Question</button>
-                <button type="submit" class="w-full bg-green-600 text-white p-2 rounded-md hover:bg-green-500">Update Quiz</button>
-            </form>
+    <!-- Header -->
+    <div class="mb-8 flex items-center justify-between">
+      <div>
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-violet-100 dark:bg-violet-500/15 border border-violet-200 dark:border-violet-500/30 text-violet-700 dark:text-violet-300 text-xs font-semibold mb-2">
+          <span>✏️ Quiz Revision</span>
         </div>
+        <h1 class="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">Edit Quiz Assessment</h1>
+        <p class="text-slate-500 dark:text-slate-400 text-sm mt-0.5">Revise questions, correct answers, or adjust settings for "<%= quiz.quiz_name %>".</p>
+      </div>
+
+      <a href="/admin/quiz" class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 dark:text-slate-300 bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 hover:border-violet-400 transition-all flex items-center gap-1.5 shadow-sm">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
+        Cancel & Return
+      </a>
     </div>
-    
 
-    <script>
-        let questionIndex = <%= quiz.questions.length %>;  
+    <!-- Edit Form -->
+    <form action="/admin/quiz/<%= quizId %>/update" method="POST">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
 
-        document.getElementById('addQuestion').addEventListener('click', function () {
-            const newQuestion = `
-                <div class="mb-4 border p-4 rounded-md">
-                    <input type="hidden" name="questions[${questionIndex}][question_id]" value="" />
-                    <h3 class="font-semibold mb-2">Question ${questionIndex + 1}</h3>
-                    <input type="text" name="questions[${questionIndex}][question]" placeholder="Question" required class="block w-full p-2 border border-gray-300 rounded-md mb-2 focus:outline-none focus:ring focus:ring-blue-200" />
-                    <input type="text" name="questions[${questionIndex}][option_a]" placeholder="Option A" required class="block w-full p-2 border border-gray-300 rounded-md mb-2 focus:outline-none focus:ring focus:ring-blue-200" />
-                    <input type="text" name="questions[${questionIndex}][option_b]" placeholder="Option B" required class="block w-full p-2 border border-gray-300 rounded-md mb-2 focus:outline-none focus:ring focus:ring-blue-200" />
-                    <input type="text" name="questions[${questionIndex}][option_c]" placeholder="Option C" required class="block w-full p-2 border border-gray-300 rounded-md mb-2 focus:outline-none focus:ring focus:ring-blue-200" />
-                    <input type="text" name="questions[${questionIndex}][option_d]" placeholder="Option D" required class="block w-full p-2 border border-gray-300 rounded-md mb-2 focus:outline-none focus:ring focus:ring-blue-200" />
-                    <input type="text" name="questions[${questionIndex}][correct_answer]" placeholder="Correct Answer" required class="block w-full p-2 border border-gray-300 rounded-md mb-2 focus:outline-none focus:ring focus:ring-blue-200" />
-                </div>`;
-            document.getElementById('questions').insertAdjacentHTML('beforeend', newQuestion);
-            questionIndex++;
-        });
-    </script>
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        
+        <!-- Left: Questions Builder (8 cols) -->
+        <div class="lg:col-span-8 space-y-6">
+          <div class="glass-card rounded-2xl p-6 sm:p-8">
+            <h2 class="text-base font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+              <svg class="w-5 h-5 text-violet-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+              Basic Information
+            </h2>
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-2">Quiz Name *</label>
+              <input type="text" id="quiz_name" name="quiz_name" value="<%= quiz.quiz_name %>" required placeholder="Quiz Name"
+                     class="input-field w-full px-4 py-3 rounded-xl text-sm font-medium">
+            </div>
+          </div>
+
+          <!-- Existing Questions -->
+          <div id="questions" class="space-y-4">
+            <% quiz.questions.forEach((question, index) => { %>
+              <div class="question-card glass-card rounded-2xl p-6 relative">
+                <input type="hidden" name="questions[<%= index %>][question_id]" value="<%= question.question_id %>" />
+                <div class="flex items-center justify-between mb-4 border-b border-slate-200/80 dark:border-white/10 pb-3">
+                  <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold bg-violet-100 dark:bg-violet-500/20 text-violet-700 dark:text-violet-300">
+                    Question <%= index + 1 %>
+                  </span>
+                </div>
+
+                <div class="space-y-4">
+                  <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">Question Prompt *</label>
+                    <input type="text" name="questions[<%= index %>][question]" value="<%= question.question %>" required placeholder="Question prompt..."
+                           class="input-field w-full px-4 py-2.5 rounded-xl text-sm font-medium">
+                  </div>
+
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                      <label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Option A *</label>
+                      <input type="text" name="questions[<%= index %>][option_a]" value="<%= question.option_a %>" required placeholder="Option A"
+                             class="input-field w-full px-3.5 py-2 rounded-xl text-sm">
+                    </div>
+                    <div>
+                      <label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Option B *</label>
+                      <input type="text" name="questions[<%= index %>][option_b]" value="<%= question.option_b %>" required placeholder="Option B"
+                             class="input-field w-full px-3.5 py-2 rounded-xl text-sm">
+                    </div>
+                    <div>
+                      <label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Option C *</label>
+                      <input type="text" name="questions[<%= index %>][option_c]" value="<%= question.option_c %>" required placeholder="Option C"
+                             class="input-field w-full px-3.5 py-2 rounded-xl text-sm">
+                    </div>
+                    <div>
+                      <label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Option D *</label>
+                      <input type="text" name="questions[<%= index %>][option_d]" value="<%= question.option_d %>" required placeholder="Option D"
+                             class="input-field w-full px-3.5 py-2 rounded-xl text-sm">
+                    </div>
+                  </div>
+
+                  <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 mb-1.5">Correct Answer Key *</label>
+                    <input type="text" name="questions[<%= index %>][correct_answer]" value="<%= question.correct_answer %>" required placeholder="Correct answer"
+                           class="input-field w-full px-4 py-2.5 rounded-xl text-sm font-medium border-emerald-500/40">
+                  </div>
+                </div>
+              </div>
+            <% }) %>
+          </div>
+
+          <!-- Add Question Button -->
+          <button type="button" id="addQuestion"
+                  class="w-full py-3.5 rounded-2xl border-2 border-dashed border-violet-400/50 hover:border-violet-500 dark:border-violet-500/30 dark:hover:border-violet-400 text-violet-600 dark:text-violet-400 hover:bg-violet-50 dark:hover:bg-violet-500/10 font-bold text-xs flex items-center justify-center gap-2 transition-all">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4" /></svg>
+            <span>Add Additional Question</span>
+          </button>
+        </div>
+
+        <!-- Right: Settings Sidebar (4 cols) -->
+        <div class="lg:col-span-4">
+          <div class="glass-card rounded-2xl p-6 sm:p-8 space-y-6 lg:sticky lg:top-28 shadow-xl">
+            <h2 class="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2 pb-4 border-b border-slate-200/80 dark:border-white/10">
+              <svg class="w-5 h-5 text-violet-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+              Quiz Settings
+            </h2>
+
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-2">Description</label>
+              <textarea name="description" rows="4" placeholder="Quiz description..."
+                        class="input-field w-full px-4 py-3 rounded-xl text-sm font-medium resize-none"><%= quiz.description %></textarea>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-2">Send Email Notification?</label>
+              <select name="send_email" class="input-field w-full px-4 py-3 rounded-xl text-sm font-medium">
+                <option value="1" <%= quiz.send_email === 1 ? 'selected' : '' %>>Yes</option>
+                <option value="0" <%= quiz.send_email === 0 ? 'selected' : '' %>>No</option>
+              </select>
+            </div>
+
+            <div class="pt-4 border-t border-slate-200/80 dark:border-white/10">
+              <button type="submit" class="btn-gradient w-full py-3.5 rounded-xl font-bold text-sm tracking-wide shadow-lg flex items-center justify-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" /></svg>
+                <span>Save & Update Quiz</span>
+              </button>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </form>
+
+  </main>
+
+  <!-- Footer Component -->
+  <%- include('partials/footer') %>
+
+  <!-- Add Question Script -->
+  <script>
+    let questionIndex = <%= quiz.questions.length %>;
+    document.getElementById('addQuestion').addEventListener('click', function () {
+      const newQuestion = `
+        <div class="question-card glass-card rounded-2xl p-6 relative">
+          <input type="hidden" name="questions[${questionIndex}][question_id]" value="" />
+          <div class="flex items-center justify-between mb-4 border-b border-slate-200/80 dark:border-white/10 pb-3">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold bg-violet-100 dark:bg-violet-500/20 text-violet-700 dark:text-violet-300">
+              Question ${questionIndex + 1}
+            </span>
+          </div>
+
+          <div class="space-y-4">
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">Question Prompt *</label>
+              <input type="text" name="questions[${questionIndex}][question]" required placeholder="Enter the question text here..."
+                     class="input-field w-full px-4 py-2.5 rounded-xl text-sm font-medium">
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Option A *</label>
+                <input type="text" name="questions[${questionIndex}][option_a]" required placeholder="Option A"
+                       class="input-field w-full px-3.5 py-2 rounded-xl text-sm">
+              </div>
+              <div>
+                <label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Option B *</label>
+                <input type="text" name="questions[${questionIndex}][option_b]" required placeholder="Option B"
+                       class="input-field w-full px-3.5 py-2 rounded-xl text-sm">
+              </div>
+              <div>
+                <label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Option C *</label>
+                <input type="text" name="questions[${questionIndex}][option_c]" required placeholder="Option C"
+                       class="input-field w-full px-3.5 py-2 rounded-xl text-sm">
+              </div>
+              <div>
+                <label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Option D *</label>
+                <input type="text" name="questions[${questionIndex}][option_d]" required placeholder="Option D"
+                       class="input-field w-full px-3.5 py-2 rounded-xl text-sm">
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 mb-1.5">Correct Answer Key *</label>
+              <input type="text" name="questions[${questionIndex}][correct_answer]" required placeholder="e.g. a, b, c, or d"
+                     class="input-field w-full px-4 py-2.5 rounded-xl text-sm font-medium border-emerald-500/40">
+            </div>
+          </div>
+        </div>`;
+      document.getElementById('questions').insertAdjacentHTML('beforeend', newQuestion);
+      questionIndex++;
+    });
+  </script>
+
 </body>
 </html>

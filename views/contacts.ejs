@@ -1,139 +1,96 @@
 <!DOCTYPE html>
-<html lang="en" x-data="{ darkMode: localStorage.getItem('darkMode') === 'true' || (!('darkMode' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches) }" x-init="$watch('darkMode', val => localStorage.setItem('darkMode', val)); darkMode ? document.documentElement.classList.add('dark') : document.documentElement.classList.remove('dark')" :class="{ 'dark': darkMode }">
+<html lang="en" 
+      x-data="{ darkMode: localStorage.getItem('darkMode') === 'true' || (!('darkMode' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches) }" 
+      x-init="$watch('darkMode', val => localStorage.setItem('darkMode', val)); darkMode ? document.documentElement.classList.add('dark') : document.documentElement.classList.remove('dark')" 
+      :class="{ 'dark': darkMode }">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Contact Queries — EduVerse</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
-    rel="stylesheet">
-  <style>
-    * {
-      font-family: 'Poppins', sans-serif;
-    }
-
-    /* Hardcoded body background removed for dark mode */
-
-    .nav-glass {
-      background: rgba(15, 12, 41, 0.85);
-      backdrop-filter: blur(20px);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    }
-
-    .glass-card {
-      background: rgba(255, 255, 255, 0.06);
-      backdrop-filter: blur(15px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .dots-pattern {
-      background-image: radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px);
-      background-size: 30px 30px;
-    }
-
-    .query-row {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      transition: all 0.3s;
-    }
-
-    .query-row:hover {
-      background: rgba(139, 92, 246, 0.06);
-      border-color: rgba(139, 92, 246, 0.15);
-    }
-  </style>
-    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <%- include('partials/head', { title: 'Admin — Inquiries & Messages' }) %>
 </head>
 
-<body class="dots-pattern  bg-gray-50 dark:bg-[#0f0c29] text-gray-800 dark:text-white transition-colors duration-300 min-h-screen" :style="darkMode ? 'background: linear-gradient(180deg, #0f0c29 0%, #1a1440 30%, #1e1848 60%, #24243e 100%);' : 'background: #f8fafc;'">
+<body class="dots-pattern bg-slate-50 dark:bg-[#0f0c29] text-slate-800 dark:text-white transition-colors duration-300 min-h-screen flex flex-col"
+      :style="darkMode ? 'background: linear-gradient(180deg, #0f0c29 0%, #1a1440 30%, #1e1848 60%, #24243e 100%);' : 'background: #f8fafc;'">
 
-  <nav class="nav-glass p-4 sticky top-0 z-50">
-    <div class="max-w-screen-xl p-2 sm:px-16 mx-auto flex justify-between items-center">
-      <a href="/" class="flex items-center gap-2">
-        <div
-          class="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center shadow-lg">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24"
-            stroke="currentColor" stroke-width="2.5">
-            <path stroke-linecap="round" stroke-linejoin="round"
-              d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-          </svg>
+  <!-- Ambient Glow -->
+  <div class="orb orb-purple w-96 h-96 -top-20 -left-20"></div>
+
+  <!-- Navbar Component -->
+  <%- include('partials/navbar') %>
+
+  <!-- Main Section -->
+  <main class="flex-1 max-w-screen-xl w-full px-4 sm:px-8 lg:px-12 mx-auto py-10 relative z-10">
+    <div class="flex items-center justify-between mb-8">
+      <div>
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-violet-100 dark:bg-violet-500/15 border border-violet-200 dark:border-violet-500/30 text-violet-700 dark:text-violet-300 text-xs font-semibold mb-2">
+          <span>📬 Administrative Inbox</span>
         </div>
-        <span class="text-white text-xl font-bold">EduVerse</span>
-      </a>
-      <div class="hidden md:flex items-center space-x-6 text-sm font-medium">
-        <a href="/" class="text-gray-400 hover:text-white transition">Home</a>
-        <% if (user && user.role !=='user' ) { %>
-          <a href="/admin/quiz" class="text-gray-400 hover:text-white transition">Admin</a>
-          <a href="/contacts" class="text-violet-400 font-semibold">Queries</a>
-          <% } %>
-            <a href="/courses" class="text-gray-400 hover:text-white transition">Courses</a>
-            <a href="/leaderboard" class="text-gray-400 hover:text-white transition">Results</a>
-            <a href="/contact" class="text-gray-400 hover:text-white transition">Contact</a>
-            <a href="/profile" class="text-gray-400 hover:text-white transition">
-              <span
-                class="bg-violet-500/20 border border-violet-500/30 text-violet-300 px-3 py-1 rounded-lg text-xs font-semibold">
-                <%= user.name %>
-              </span>
-            </a>
-            
-                <!-- Dark Mode Toggle -->
-                <div @click="darkMode = !darkMode" class="dark-mode-toggle text-gray-600 dark:text-gray-300 cursor-pointer p-2 rounded-full hover:bg-violet-500/10 transition-colors" title="Toggle Dark/Light Mode">
-                    <svg x-show="!darkMode" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
-                    <svg x-show="darkMode" x-cloak class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-                </div>
-                <a href="/logout" class="text-gray-500 hover:text-red-400 transition">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-              </svg>
-            </a>
+        <h1 class="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">Contact Queries</h1>
+        <p class="text-slate-500 dark:text-slate-400 text-sm mt-0.5">Manage and review direct messages submitted by learners and visitors.</p>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <span class="px-3 py-1.5 rounded-xl bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 text-xs font-bold text-slate-700 dark:text-slate-300 shadow-sm">
+          Total: <%= contacts ? contacts.length : 0 %>
+        </span>
       </div>
     </div>
-  </nav>
 
-  <section class="max-w-screen-xl px-4 sm:px-16 mx-auto py-8">
-    <h1 class="text-3xl font-extrabold mb-6">📬 Contact Queries</h1>
-
-    <div class="glass-card rounded-2xl p-6">
-      <% if (contacts && contacts.length> 0) { %>
-        <!-- Header -->
-        <div
-          class="hidden md:grid grid-cols-12 gap-4 px-5 py-3 mb-3 text-xs font-bold text-gray-500 uppercase tracking-wider">
+    <div class="glass-card rounded-2xl p-6 sm:p-8">
+      <% if (contacts && contacts.length > 0) { %>
+        <!-- Table Header (Desktop) -->
+        <div class="hidden md:grid grid-cols-12 gap-4 px-5 py-3 mb-2 text-xs font-bold text-slate-400 uppercase tracking-wider border-b border-slate-200/80 dark:border-white/10">
           <span class="col-span-1">#</span>
-          <span class="col-span-2">Name</span>
-          <span class="col-span-3">Email</span>
-          <span class="col-span-4">Message</span>
-          <span class="col-span-2 text-right">Date</span>
+          <span class="col-span-2">Sender</span>
+          <span class="col-span-3">Email Address</span>
+          <span class="col-span-4">Inquiry Details</span>
+          <span class="col-span-2 text-right">Received Date</span>
         </div>
-        <div class="space-y-2">
-          <% contacts.forEach((contact, index)=> { %>
-            <div class="query-row rounded-xl p-5 md:grid md:grid-cols-12 md:gap-4 md:items-center">
-              <span class="col-span-1 text-gray-500 font-bold text-sm">
-                <%= index + 1 %>
-              </span>
-              <span class="col-span-2 font-semibold text-white text-sm">
-                <%= contact.name %>
-              </span>
-              <span class="col-span-3 text-violet-400 text-sm">
-                <%= contact.email %>
-              </span>
-              <span class="col-span-4 text-gray-400 text-sm line-clamp-2">
-                <%= contact.message %>
-              </span>
-              <span class="col-span-2 text-right text-gray-500 text-xs">
-                <%= new Date(contact.created_at).toLocaleDateString() %>
-              </span>
-            </div>
-            <% }) %>
-        </div>
-        <% } else { %>
-          <div class="text-center py-12">
-            <p class="text-gray-400">No queries received yet.</p>
-          </div>
-          <% } %>
-    </div>
-  </section>
-</body>
 
+        <div class="space-y-3">
+          <% contacts.forEach((contact, index) => { %>
+            <div class="glass-item rounded-2xl p-5 flex flex-col md:grid md:grid-cols-12 md:gap-4 md:items-center space-y-2 md:space-y-0">
+              <div class="col-span-1 flex items-center gap-2">
+                <span class="w-7 h-7 rounded-lg bg-violet-100 dark:bg-violet-500/20 text-violet-700 dark:text-violet-300 flex items-center justify-center text-xs font-bold">
+                  <%= index + 1 %>
+                </span>
+              </div>
+              <div class="col-span-2">
+                <p class="font-bold text-sm text-slate-900 dark:text-white"><%= contact.name %></p>
+              </div>
+              <div class="col-span-3">
+                <a href="mailto:<%= contact.email %>" class="text-xs font-semibold text-violet-600 dark:text-violet-400 hover:underline break-all">
+                  <%= contact.email %>
+                </a>
+              </div>
+              <div class="col-span-4">
+                <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed bg-slate-50 dark:bg-white/5 p-3 rounded-xl border border-slate-200/60 dark:border-white/5">
+                  <%= contact.message %>
+                </p>
+              </div>
+              <div class="col-span-2 md:text-right">
+                <span class="text-[11px] font-medium text-slate-400">
+                  <%= new Date(contact.created_at).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' }) %>
+                </span>
+              </div>
+            </div>
+          <% }) %>
+        </div>
+      <% } else { %>
+        <div class="text-center py-16">
+          <div class="w-16 h-16 rounded-2xl bg-violet-100 dark:bg-violet-500/15 text-violet-600 dark:text-violet-400 flex items-center justify-center mx-auto mb-4">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" /></svg>
+          </div>
+          <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-1">No inquiries in your inbox</h3>
+          <p class="text-slate-500 dark:text-slate-400 text-sm max-w-sm mx-auto">
+            All caught up! Any messages submitted through the contact form will appear here.
+          </p>
+        </div>
+      <% } %>
+    </div>
+  </main>
+
+  <!-- Footer Component -->
+  <%- include('partials/footer') %>
+
+</body>
 </html>
