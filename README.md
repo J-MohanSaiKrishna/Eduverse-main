@@ -1,6 +1,6 @@
 # Eduverse 🎓
 
-Eduverse is a modern, full-stack educational web application designed to offer courses, interactive quizzes, and seamless user experiences.
+Eduverse is a modern, full-stack educational web application designed to offer courses, interactive quizzes, and seamless user experiences for your education.
 
 ## 🚀 Features
 
